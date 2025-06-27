@@ -1,0 +1,258 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gcp-resource-analysis"
+dynamic = ["version"]
+description = "GCP Resource Analysis Client - Security, Compliance & Optimization"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Your Name", email = "your.email@company.com"},
+]
+maintainers = [
+    {name = "Your Name", email = "your.email@company.com"},
+]
+keywords = [
+    "gcp",
+    "google-cloud",
+    "resource-analysis",
+    "security",
+    "compliance",
+    "optimization",
+    "cloud-asset-inventory",
+    "governance",
+    "cost-optimization",
+    "security-analysis",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Topic :: System :: Systems Administration",
+    "Topic :: System :: Monitoring",
+    "Topic :: Security",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "google-cloud-asset>=3.19.0",
+    "google-cloud-storage>=2.10.0",
+    "google-cloud-sql>=1.8.0",
+    "google-cloud-compute>=1.14.0",
+    "google-cloud-container>=2.21.0",
+    "google-cloud-run>=0.10.0",
+    "google-auth>=2.23.0",
+    "google-auth-oauthlib>=1.1.0",
+    "google-auth-httplib2>=0.1.1",
+    "pydantic>=2.0.0",
+    "requests>=2.31.0",
+    "click>=8.0.0",
+    "rich>=13.0.0",
+    "tabulate>=0.9.0",
+    "pandas>=1.5.0",
+    "python-dateutil>=2.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0",
+    "pre-commit>=3.3.0",
+    "tox>=4.0.0",
+]
+testing = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.21.0",
+    "coverage[toml]>=7.0.0",
+]
+docs = [
+    "sphinx>=5.0.0",
+    "sphinx-rtd-theme>=1.2.0",
+    "myst-parser>=1.0.0",
+    "sphinx-autodoc-typehints>=1.24.0",
+    "sphinx-click>=4.4.0",
+]
+all = [
+    "gcp-resource-analysis[dev,testing,docs]"
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/gcp-resource-analysis"
+Documentation = "https://github.com/your-org/gcp-resource-analysis/docs"
+Repository = "https://github.com/your-org/gcp-resource-analysis.git"
+"Bug Tracker" = "https://github.com/your-org/gcp-resource-analysis/issues"
+Changelog = "https://github.com/your-org/gcp-resource-analysis/blob/main/CHANGELOG.md"
+
+[project.scripts]
+gcp-resource-analysis = "gcp_resource_analysis.cli:main"
+gcp-analysis = "gcp_resource_analysis.cli:main"
+
+[tool.setuptools]
+packages = ["gcp_resource_analysis"]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {file = "VERSION"}
+
+[tool.setuptools.package-data]
+gcp_resource_analysis = [
+    "templates/*.json",
+    "templates/*.yaml",
+    "queries/*.sql",
+]
+
+# Testing configuration
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=gcp_resource_analysis",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+testpaths = ["tests"]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow running tests",
+    "network: Tests that require network access",
+    "gcp: Tests that require GCP credentials",
+]
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+]
+
+# Coverage configuration
+[tool.coverage.run]
+source = ["gcp_resource_analysis"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/.venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+# Black code formatting
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+include = '\\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \\.eggs
+  | \\.git
+  | \\.hg
+  | \\.mypy_cache
+  | \\.tox
+  | \\.venv
+  | build
+  | dist
+)/
+'''
+
+# isort import sorting
+[tool.isort]
+profile = "black"
+line_length = 100
+known_first_party = ["gcp_resource_analysis"]
+known_third_party = [
+    "google",
+    "pydantic",
+    "click",
+    "rich",
+    "pandas",
+    "pytest",
+]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+# MyPy type checking
+[tool.mypy]
+python_version = "3.8"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+strict_equality = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = [
+    "google.cloud.*",
+    "google.auth.*",
+    "google.oauth2.*",
+]
+ignore_missing_imports = true
+
+# Flake8 configuration
+[tool.flake8]
+max-line-length = 100
+extend-ignore = [
+    "E203",  # whitespace before ':'
+    "E501",  # line too long (handled by black)
+    "W503",  # line break before binary operator
+]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".venv",
+    ".tox",
+    "*.egg-info",
+]
+per-file-ignores = [
+    "__init__.py:F401",  # imported but unused
+    "tests/*:S101",      # use of assert
+]
+
+# Bandit security linting
+[tool.bandit]
+exclude_dirs = ["tests", "test_*"]
+skips = ["B101"]  # assert_used
+
