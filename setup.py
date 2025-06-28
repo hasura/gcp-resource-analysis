@@ -19,14 +19,6 @@ def get_version():
                 return version_match.group(1)
     except FileNotFoundError:
         pass
-
-    # Try VERSION file
-    try:
-        with open("VERSION", "r") as f:
-            return f.read().strip()
-    except FileNotFoundError:
-        pass
-
     return "1.0.0"  # Default version
 
 
@@ -64,12 +56,8 @@ def get_requirements():
 # Core requirements (minimal for basic functionality)
 CORE_REQUIREMENTS = [
     "requests>=2.28.0,<3.0.0",
-    "google-cloud-asset>=3.20.0,<4.0.0",
-    "google-cloud-resource-manager>=1.10.0,<2.0.0",
     "python-dotenv>=0.19.0,<2.0.0",
-    "pydantic>=2.11.7",
-    "pandas>=1.5.0,<3.0.0",
-    "tabulate>=0.9.0,<1.0.0"
+    "pydantic>=2.11.7"
 ]
 
 # Optional requirements for enhanced functionality
@@ -78,26 +66,19 @@ EXTRAS_REQUIRE = {
         "google-auth>=2.17.0,<3.0.0",
         "google-auth-oauthlib>=1.0.0,<2.0.0",
         "google-auth-httplib2>=0.1.0,<1.0.0",
+        "google-cloud-asset>=3.20.0,<4.0.0",
+        "google-cloud-resource-manager>=1.10.0,<2.0.0",
     ],
     "dev": [
         "pytest>=7.0.0,<8.0.0",
         "pytest-cov>=4.0.0,<5.0.0",
-        "pytest-mock>=3.10.0,<4.0.0",
-        "pytest-asyncio>=0.21.0,<1.0.0",
         "black>=22.0.0,<24.0.0",
         "flake8>=5.0.0,<7.0.0",
         "mypy>=1.0.0,<2.0.0",
     ],
     "docs": [
         "sphinx>=5.0.0,<7.0.0",
-        "sphinx-rtd-theme>=1.2.0,<2.0.0",
-        "myst-parser>=1.0.0,<2.0.0",
-    ],
-    "testing": [
-        "pytest>=7.0.0,<8.0.0",
-        "pytest-cov>=4.0.0,<5.0.0",
-        "pytest-mock>=3.10.0,<4.0.0",
-        "pytest-asyncio>=0.21.0,<1.0.0",
+        "sphinx-rtd-theme>=1.0.0,<2.0.0",
     ],
 }
 
@@ -135,7 +116,6 @@ setup(
         "Programming Language :: Python :: 3.12",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: System :: Systems Administration",
-        "Topic :: System :: Monitoring",
         "Topic :: Security",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     ],
@@ -152,22 +132,7 @@ setup(
 
     # Package data
     include_package_data=True,
-    package_data={
-        "gcp_resource_analysis": [
-            "templates/*.json",
-            "templates/*.yaml",
-            "queries/*.sql",
-        ],
-    },
     zip_safe=False,
-
-    # Console scripts
-    entry_points={
-        "console_scripts": [
-            "gcp-resource-analysis=gcp_resource_analysis.cli:main",
-            "gcp-analysis=gcp_resource_analysis.cli:main",
-        ],
-    },
 
     # Keywords for PyPI search
     keywords=[
@@ -188,11 +153,8 @@ setup(
         "Documentation": "https://github.com/hasura/gcp-resource-analysis/blob/main/README.md",
         "Source": "https://github.com/hasura/gcp-resource-analysis",
         "Tracker": "https://github.com/hasura/gcp-resource-analysis/issues",
-        "Bug Tracker": "https://github.com/hasura/gcp-resource-analysis/issues",
     },
 
     # Additional metadata
     platforms=["any"],
-    maintainer="GCP Resource Analysis",
-    maintainer_email="ken@promptql.io",  # Update with your email
 )
