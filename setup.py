@@ -97,8 +97,8 @@ setup(
 
     # Author information
     author="GCP Resource Analysis",
-    author_email="ken@promptql.io",  # Update with your email
-    url="https://github.com/hasura/gcp-resource-analysis",  # Update with your repo
+    author_email="ken@promptql.io",
+    url="https://github.com/hasura/gcp-resource-analysis",
 
     # License and classifiers
     license="MIT",
