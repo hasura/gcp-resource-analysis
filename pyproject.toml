@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gcp-resource-analysis"
-version = "1.0.1"
+version = "1.0.2"
 description = "GCP Resource Analysis Client - Security, Compliance & Optimization"
 readme = "README.md"
 license = {file = "LICENSE"}
