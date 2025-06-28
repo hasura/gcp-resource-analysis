@@ -15,7 +15,7 @@ from .gcp_compute_governance import GCPComputeGovernanceQueries
 from .gcp_container_analysis import GCPContainerAnalysisQueries
 from .gcp_iam_analysis import GCPIAMAnalysisQueries
 
-__version__ = "1.0.9"
+__version__ = "1.0.10"
 __author__ = "Kenneth Stott"
 __email__ = "ken@promptql.io"
 
