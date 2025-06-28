@@ -1,0 +1,19 @@
+services:
+  app_gcp:
+    build:
+      context: .
+      dockerfile: .hasura-connector/Dockerfile
+    environment:
+      HASURA_SERVICE_TOKEN_SECRET: $APP_GCP_HASURA_SERVICE_TOKEN_SECRET
+      OTEL_EXPORTER_OTLP_ENDPOINT: $APP_GCP_OTEL_EXPORTER_OTLP_ENDPOINT
+      OTEL_SERVICE_NAME: $APP_GCP_OTEL_SERVICE_NAME
+      GCP_PROJECT_IDS: ?
+      GOOGLE_APPLICATION_CREDENTIALS: ?
+      GCP_ANALYSIS_LOG_LEVEL: ?
+      GCP_ANALYSIS_MAX_REQUESTS_PER_MINUTE: ?
+      GCP_ANALYSIS_DEFAULT_REGION: ?
+
+    extra_hosts:
+      - local.hasura.dev:host-gateway
+    ports:
+      - 4232:8080

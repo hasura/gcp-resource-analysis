@@ -1,8 +1,8 @@
-from models import GCPConfig
 from .client import GCPResourceAnalysisClient
 
 from .models import (
 # Compute Governance Models
+    GCPConfig,
     GCPComputeSecurityResult,
     GCPComputeOptimizationResult,
     GCPComputeResource,
