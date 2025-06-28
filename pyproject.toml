@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gcp-resource-analysis"
-dynamic = ["version"]
+version = "1.0.0"
 description = "GCP Resource Analysis Client - Security, Compliance & Optimization"
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [
-    {name = "Your Name", email = "your.email@company.com"},
+    {name = "Kenneth Stott", email = "ken@promptql.io"},
 ]
 maintainers = [
-    {name = "Your Name", email = "your.email@company.com"},
+    {name = "Kenneth Stott", email = "ken@promptql.io"},
 ]
 keywords = [
     "gcp",
@@ -94,11 +94,11 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/gcp-resource-analysis"
-Documentation = "https://github.com/your-org/gcp-resource-analysis/docs"
-Repository = "https://github.com/your-org/gcp-resource-analysis.git"
-"Bug Tracker" = "https://github.com/your-org/gcp-resource-analysis/issues"
-Changelog = "https://github.com/your-org/gcp-resource-analysis/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/hasura/gcp-resource-analysis"
+Documentation = "https://github.com/hasura/gcp-resource-analysis/docs"
+Repository = "https://github.com/hasura/gcp-resource-analysis.git"
+"Bug Tracker" = "https://github.com/hasura/gcp-resource-analysis/issues"
+Changelog = "https://github.com/hasura/gcp-resource-analysis/blob/main/CHANGELOG.md"
 
 [project.scripts]
 gcp-resource-analysis = "gcp_resource_analysis.cli:main"
