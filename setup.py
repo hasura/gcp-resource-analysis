@@ -1,105 +1,156 @@
 #!/usr/bin/env python3
 """
-Setup configuration for GCP Resource Analysis Package
-
-This package provides comprehensive analysis of Google Cloud Platform resources
-using Cloud Asset Inventory, offering security, compliance, optimization, and
-governance insights equivalent to Azure Resource Graph functionality.
+Setup script for GCP Resource Analysis Client
 """
 
-from setuptools import setup, find_packages
 import os
+import re
+from setuptools import setup, find_packages
 
 
-# Read version from VERSION file
+# Read version from __init__.py or version file
 def get_version():
-    version_file = os.path.join(os.path.dirname(__file__), 'VERSION')
-    if os.path.exists(version_file):
-        with open(version_file, 'r') as f:
+    """Extract version from package"""
+    try:
+        with open(os.path.join("gcp_resource_analysis", "__init__.py"), "r") as f:
+            content = f.read()
+            version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", content, re.M)
+            if version_match:
+                return version_match.group(1)
+    except FileNotFoundError:
+        pass
+
+    # Try VERSION file
+    try:
+        with open("VERSION", "r") as f:
             return f.read().strip()
-    return "1.0.0"
+    except FileNotFoundError:
+        pass
+
+    return "1.0.0"  # Default version
 
 
 # Read long description from README
 def get_long_description():
-    readme_file = os.path.join(os.path.dirname(__file__), 'README.md')
-    if os.path.exists(readme_file):
-        with open(readme_file, 'r', encoding='utf-8') as f:
+    """Read long description from README file"""
+    try:
+        with open("README.md", "r", encoding="utf-8") as f:
             return f.read()
-    return ""
+    except FileNotFoundError:
+        return "GCP Resource Analysis Client for querying GCP resources and analyzing security, compliance, and optimization."
 
 
 # Read requirements from requirements.txt
 def get_requirements():
-    requirements_file = os.path.join(os.path.dirname(__file__), 'requirements.txt')
-    if os.path.exists(requirements_file):
-        with open(requirements_file, 'r') as f:
-            return [line.strip() for line in f if line.strip() and not line.startswith('#')]
-    return []
+    """Read requirements from requirements.txt"""
+    requirements = []
+    try:
+        with open("requirements.txt", "r") as f:
+            for line in f:
+                line = line.strip()
+                # Skip empty lines and comments
+                if line and not line.startswith("#"):
+                    # Skip optional dependencies for core install
+                    if line.startswith("google-auth") or line.startswith("google-cloud-cli"):
+                        continue  # Skip optional dependencies for core install
+                    if any(dev_dep in line for dev_dep in ["pytest", "black", "flake8", "mypy", "sphinx"]):
+                        continue  # Skip development dependencies
+                    requirements.append(line.split()[0])  # Take first part (removes comments)
+        return requirements
+    except FileNotFoundError:
+        return ["requests>=2.28.0"]
 
 
-# Read development requirements
-def get_dev_requirements():
-    dev_requirements_file = os.path.join(os.path.dirname(__file__), 'requirements-dev.txt')
-    if os.path.exists(dev_requirements_file):
-        with open(dev_requirements_file, 'r') as f:
-            return [line.strip() for line in f if line.strip() and not line.startswith('#')]
-    return []
+# Core requirements (minimal for basic functionality)
+CORE_REQUIREMENTS = [
+    "requests>=2.28.0,<3.0.0",
+    "google-cloud-asset>=3.20.0,<4.0.0",
+    "google-cloud-resource-manager>=1.10.0,<2.0.0",
+    "python-dotenv>=0.19.0,<2.0.0",
+    "pydantic>=2.11.7",
+    "pandas>=1.5.0,<3.0.0",
+    "tabulate>=0.9.0,<1.0.0"
+]
 
+# Optional requirements for enhanced functionality
+EXTRAS_REQUIRE = {
+    "auth": [
+        "google-auth>=2.17.0,<3.0.0",
+        "google-auth-oauthlib>=1.0.0,<2.0.0",
+        "google-auth-httplib2>=0.1.0,<1.0.0",
+    ],
+    "dev": [
+        "pytest>=7.0.0,<8.0.0",
+        "pytest-cov>=4.0.0,<5.0.0",
+        "pytest-mock>=3.10.0,<4.0.0",
+        "pytest-asyncio>=0.21.0,<1.0.0",
+        "black>=22.0.0,<24.0.0",
+        "flake8>=5.0.0,<7.0.0",
+        "mypy>=1.0.0,<2.0.0",
+    ],
+    "docs": [
+        "sphinx>=5.0.0,<7.0.0",
+        "sphinx-rtd-theme>=1.2.0,<2.0.0",
+        "myst-parser>=1.0.0,<2.0.0",
+    ],
+    "testing": [
+        "pytest>=7.0.0,<8.0.0",
+        "pytest-cov>=4.0.0,<5.0.0",
+        "pytest-mock>=3.10.0,<4.0.0",
+        "pytest-asyncio>=0.21.0,<1.0.0",
+    ],
+}
+
+# All optional dependencies
+EXTRAS_REQUIRE["all"] = [
+    dep for deps in EXTRAS_REQUIRE.values() for dep in deps
+]
 
 setup(
+    # Package metadata
     name="gcp-resource-analysis",
     version=get_version(),
-    author="Your Name",
-    author_email="your.email@company.com",
-    description="GCP Resource Analysis Client - Security, Compliance & Optimization",
+    description="Python client for GCP Resource Analysis with security, compliance & optimization insights",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
-    url="https://github.com/your-org/gcp-resource-analysis",
-    project_urls={
-        "Bug Tracker": "https://github.com/your-org/gcp-resource-analysis/issues",
-        "Documentation": "https://github.com/your-org/gcp-resource-analysis/docs",
-        "Source Code": "https://github.com/your-org/gcp-resource-analysis",
-    },
-    packages=find_packages(),
+
+    # Author information
+    author="GCP Resource Analysis",
+    author_email="ken@promptql.io",  # Update with your email
+    url="https://github.com/hasura/gcp-resource-analysis",  # Update with your repo
+
+    # License and classifiers
+    license="MIT",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Intended Audience :: System Administrators",
-        "Topic :: System :: Systems Administration",
-        "Topic :: System :: Monitoring",
-        "Topic :: Security",
         "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
-        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: System :: Systems Administration",
+        "Topic :: System :: Monitoring",
+        "Topic :: Security",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     ],
+
+    # Package discovery
+    packages=find_packages(exclude=["tests", "tests.*", "docs", "examples"]),
+
+    # Python version requirement
     python_requires=">=3.8",
-    install_requires=get_requirements(),
-    extras_require={
-        "dev": get_dev_requirements(),
-        "testing": [
-            "pytest>=7.0.0",
-            "pytest-cov>=4.0.0",
-            "pytest-mock>=3.10.0",
-            "pytest-asyncio>=0.21.0",
-        ],
-        "docs": [
-            "sphinx>=5.0.0",
-            "sphinx-rtd-theme>=1.2.0",
-            "myst-parser>=1.0.0",
-        ],
-    },
-    entry_points={
-        "console_scripts": [
-            "gcp-resource-analysis=gcp_resource_analysis.cli:main",
-            "gcp-analysis=gcp_resource_analysis.cli:main",
-        ],
-    },
+
+    # Dependencies
+    install_requires=CORE_REQUIREMENTS,
+    extras_require=EXTRAS_REQUIRE,
+
+    # Package data
     include_package_data=True,
     package_data={
         "gcp_resource_analysis": [
@@ -109,39 +160,39 @@ setup(
         ],
     },
     zip_safe=False,
+
+    # Console scripts
+    entry_points={
+        "console_scripts": [
+            "gcp-resource-analysis=gcp_resource_analysis.cli:main",
+            "gcp-analysis=gcp_resource_analysis.cli:main",
+        ],
+    },
+
+    # Keywords for PyPI search
     keywords=[
         "gcp",
         "google-cloud",
         "resource-analysis",
+        "cloud-asset-inventory",
         "security",
         "compliance",
         "optimization",
-        "cloud-asset-inventory",
         "governance",
-        "cost-optimization",
-        "security-analysis",
+        "api-client",
+        "cost-optimization"
     ],
+
+    # Project URLs
+    project_urls={
+        "Documentation": "https://github.com/hasura/gcp-resource-analysis/blob/main/README.md",
+        "Source": "https://github.com/hasura/gcp-resource-analysis",
+        "Tracker": "https://github.com/hasura/gcp-resource-analysis/issues",
+        "Bug Tracker": "https://github.com/hasura/gcp-resource-analysis/issues",
+    },
+
     # Additional metadata
     platforms=["any"],
-    license="MIT",
-    maintainer="Your Name",
-    maintainer_email="your.email@company.com",
-
-    # Testing configuration
-    test_suite="tests",
-    tests_require=[
-        "pytest>=7.0.0",
-        "pytest-cov>=4.0.0",
-        "pytest-mock>=3.10.0",
-    ],
-
-    # Documentation
-    command_options={
-        'build_sphinx': {
-            'project': ('setup.py', 'gcp-resource-analysis'),
-            'version': ('setup.py', get_version()),
-            'source_dir': ('setup.py', 'docs'),
-            'build_dir': ('setup.py', 'docs/_build'),
-        }
-    },
+    maintainer="GCP Resource Analysis",
+    maintainer_email="ken@promptql.io",  # Update with your email
 )
