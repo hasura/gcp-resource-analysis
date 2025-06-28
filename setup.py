@@ -29,7 +29,7 @@ def get_long_description():
         with open("README.md", "r", encoding="utf-8") as f:
             return f.read()
     except FileNotFoundError:
-        return "GCP Resource Analysis Client for querying GCP resources and analyzing security, compliance, and optimization."
+        return "GCP Resource Analysis Client for querying GCP resources and checking security compliance."
 
 
 # Read requirements from requirements.txt
@@ -42,7 +42,7 @@ def get_requirements():
                 line = line.strip()
                 # Skip empty lines and comments
                 if line and not line.startswith("#"):
-                    # Skip optional dependencies for core install
+                    # Extract just the package name and version
                     if line.startswith("google-auth") or line.startswith("google-cloud-cli"):
                         continue  # Skip optional dependencies for core install
                     if any(dev_dep in line for dev_dep in ["pytest", "black", "flake8", "mypy", "sphinx"]):

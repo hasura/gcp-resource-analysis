@@ -9,8 +9,7 @@ This module follows the same pattern as the Azure IAM analysis but adapted for G
 """
 
 import logging
-from typing import Dict, List, Any, Optional
-from datetime import datetime, timedelta
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 

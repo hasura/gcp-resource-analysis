@@ -16,7 +16,6 @@ COMPREHENSIVE FIXES APPLIED:
 """
 
 from pydantic import BaseModel, Field, field_validator, computed_field
-from typing import Optional, Union
 
 
 class GCPServiceAccountSecurityResult(BaseModel):

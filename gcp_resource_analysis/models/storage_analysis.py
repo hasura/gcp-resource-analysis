@@ -8,11 +8,11 @@ Provides full Azure parity across all resource types
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, Field
 
+from gcp_resource_analysis.models.compute_governance import GCPComputeComplianceSummary
 from gcp_resource_analysis.models.iam_analysis import GCPIAMComplianceSummary
 from gcp_resource_analysis.models.network_analysis import GCPNetworkComplianceSummary
-from gcp_resource_analysis.models.compute_governance import GCPComputeComplianceSummary
 
 
 # =============================================================================

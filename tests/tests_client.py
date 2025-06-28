@@ -23,10 +23,10 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from gcp_resource_analysis import GCPIAMComplianceSummary
 # Import the classes we're testing
 from gcp_resource_analysis.client import GCPResourceAnalysisClient
 from gcp_resource_analysis.models import (
+    GCPIAMComplianceSummary,
     GCPComputeComplianceSummary,
     GCPStorageResource,
     GCPStorageBackupResult,

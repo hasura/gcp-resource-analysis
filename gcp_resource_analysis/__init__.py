@@ -1,174 +1,152 @@
-#!/usr/bin/env python3
-"""
-GCP Resource Analysis Package
+from models import GCPConfig
+from .client import GCPResourceAnalysisClient
 
-A comprehensive Python package for analyzing Google Cloud Platform resources
-using Cloud Asset Inventory. Provides security, compliance, optimization, and
-governance analysis equivalent to Azure Resource Graph functionality.
+from .models import (
+# Compute Governance Models
+    GCPComputeSecurityResult,
+    GCPComputeOptimizationResult,
+    GCPComputeResource,
+    GCPComputeComplianceSummary,
+)
 
-Main Components:
-- GCPResourceAnalysisClient: Main client for all analysis operations
-- Storage Analysis: Cloud Storage, Cloud SQL, BigQuery analysis
-- Compute Analysis: Compute Engine, GKE cluster analysis
-- Network Analysis: VPC, Load Balancer, Firewall analysis
-- IAM Analysis: Identity and Access Management analysis
-- Container Analysis: GKE, Cloud Run, App Engine analysis
-
-Example Usage:
-    from gcp_resource_analysis import GCPResourceAnalysisClient
-
-    client = GCPResourceAnalysisClient(
-        project_ids=["project-1", "project-2"],
-        credentials_path="path/to/service-account.json"
-    )
-
-    # Run comprehensive analysis
-    results = client.query_comprehensive_analysis()
-
-    # Individual analysis components
-    storage_results = client.query_storage_analysis()
-    compute_results = client.query_compute_analysis()
-    network_results = client.query_network_analysis()
-"""
+from .gcp_network_analysis import GCPNetworkAnalysisQueries
+from .gcp_storage_analysis import GCPStorageAnalysisQueries
+from .gcp_compute_governance import GCPComputeGovernanceQueries
+from .gcp_container_analysis import GCPContainerAnalysisQueries
+from .gcp_iam_analysis import GCPIAMAnalysisQueries
 
 __version__ = "1.0.6"
 __author__ = "Kenneth Stott"
 __email__ = "ken@promptql.io"
-__description__ = "GCP Resource Analysis Client - Security, Compliance & Optimization"
 
-# Main client import
-from .client import GCPResourceAnalysisClient
-
-# Analysis module imports
-# from .storage_analysis import StorageAnalysisQueries
-# from .compute_analysis import ComputeAnalysisQueries
-# from .network_analysis import NetworkAnalysisQueries
-# from .iam_analysis import IAMAnalysisQueries
-# from .container_workload_analysis import ContainerWorkloadAnalysisQueries
-
-# Model imports for external use
-from .models import (
-    # Storage Models
-    GCPStorageResource,
-    GCPStorageAccessControlResult,
-    GCPStorageBackupResult,
-    GCPStorageOptimizationResult,
-    GCPStorageComplianceSummary,
-
-    # Compute Models
-    GCPComputeResource,
-    GCPComputeSecurityResult,
-    GCPComputeOptimizationResult,
-    GCPComputeComplianceSummary,
-
-    # Network Models
-    GCPNetworkResource,
-    GCPNetworkSecurityResult,
-    GCPNetworkComplianceSummary,
-
-    # IAM Models
-    GCPIAMResource,
-    GCPIAMSecurityResult,
-    GCPIAMComplianceSummary,
-
-    # Container Models
-    GCPContainerResource,
-    GCPContainerSecurityResult,
-    GCPContainerComplianceSummary,
-
-    # General Models
-    RateLimitTracker,
-    GCPConfig
-)
-
-# Utility imports
-from .utils import (
-    setup_logging,
-    export_to_csv,
-    export_to_json,
-    create_compliance_report,
-    validate_project_ids
-)
-
-# Version and package info
+# Make key classes available at package level
 __all__ = [
-    # Main client
-    "GCPResourceAnalysisClient",
+    # Core client and configuration
+    'GCPResourceAnalysisClient',
+    'GCPConfig',
 
-    # Analysis query classes
-    # "StorageAnalysisQueries",
-    # "ComputeAnalysisQueries",
-    # "NetworkAnalysisQueries",
-    # "IAMAnalysisQueries",
-    # "ContainerWorkloadAnalysisQueries",
+    'GCPStorageAnalysisQueries',
+    'GCPNetworkAnalysisQueries',
+    'GCPComputeGovernanceQueries',
+    'GCPContainerAnalysisQueries',
+    'GCPIAMAnalysisQueries',
 
-    # Storage models
-    "GCPStorageResource",
-    "GCPStorageAccessControlResult",
-    "GCPStorageBackupResult",
-    "GCPStorageOptimizationResult",
-    "GCPStorageComplianceSummary",
+    'GCPComputeSecurityResult',
+    'GCPComputeOptimizationResult',
+    'GCPComputeResource',
+    'GCPComputeComplianceSummary',
 
-    # Compute models
-    "GCPComputeResource",
-    "GCPComputeSecurityResult",
-    "GCPComputeOptimizationResult",
-    "GCPComputeComplianceSummary",
-
-    # Network models
-    "GCPNetworkResource",
-    "GCPNetworkSecurityResult",
-    "GCPNetworkComplianceSummary",
-
-    # IAM models
-    "GCPIAMResource",
-    "GCPIAMSecurityResult",
-    "GCPIAMComplianceSummary",
-
-    # Container models
-    "GCPContainerResource",
-    "GCPContainerSecurityResult",
-    "GCPContainerComplianceSummary",
-
-    # Utility models
-    "RateLimitTracker",
-    "GCPConfig",
-
-    # Utility functions
-    "setup_logging",
-    "export_to_csv",
-    "export_to_json",
-    "create_compliance_report",
-    "validate_project_ids",
-
-    # Package metadata
-    "__version__",
-    "__author__",
-    "__email__",
-    "__description__"
 ]
 
-# Package-level configuration
-import logging
+__description__ = "Python client for GCP Resource Analysis with comprehensive storage, network, and compute governance analysis including security assessment, cost optimization, and compliance reporting"
 
-# Set up default logging
-logging.getLogger(__name__).addHandler(logging.NullHandler())
+# Version history
+__version_info__ = {
+    "1.0.1": "Initial storage analysis",
+    "1.0.2": "Enhanced with comprehensive network analysis and optimization",
+    "1.0.3": "Major refactor: Comprehensive storage analysis with access control, backup assessment, cost optimization",
+    "1.0.4": "Added comprehensive compute governance analysis: security, sizing optimization, and compliance"
+}
 
+# Quick start example
+__example_usage__ = '''
+from gcp_resource_analysis import GCPResourceAnalysisClient
 
-# Package initialization message
-def _show_package_info():
-    """Display package information on import"""
-    import sys
-    if hasattr(sys, 'ps1'):  # Interactive mode
+# Initialize client
+client = GCPResourceAnalysisClient()
+
+# === STORAGE ANALYSIS ===
+
+# Comprehensive storage security analysis
+storage_results = client.query_storage_analysis()
+print(f"Found {len(storage_results)} storage resources")
+
+# Storage access control analysis
+access_results = client.query_storage_access_control()
+high_risk_access = [result for result in access_results if result.is_high_risk]
+print(f"Found {len(high_risk_access)} high-risk access configurations")
+
+# Storage backup analysis
+backup_results = client.query_storage_backup_analysis()
+no_backup = [result for result in backup_results if not result.has_backup_configured]
+print(f"Found {len(no_backup)} resources without proper backup")
+
+# Storage cost optimization
+storage_optimization = client.query_storage_optimization()
+high_savings = [result for result in storage_optimization if result.has_high_optimization_potential]
+print(f"Found {len(high_savings)} high-cost optimization opportunities")
+
+# Storage compliance summary
+storage_summary = client.get_storage_compliance_summary()
+critical_apps = [s for s in storage_summary if s.has_critical_issues]
+print(f"Found {len(critical_apps)} applications with critical storage issues")
+
+# === COMPUTE GOVERNANCE ANALYSIS ===
+
+# Compute security analysis
+compute_security = client.query_compute_security()
+high_risk_instances = [instance for instance in compute_security if instance.is_high_risk]
+unencrypted_instances = [instance for instance in compute_security if not instance.is_encrypted]
+print(f"Found {len(high_risk_instances)} high-risk instances, {len(unencrypted_instances)} unencrypted instances")
+
+# Compute optimization analysis
+compute_optimization = client.query_compute_optimization()
+stopped_instances = [instance for instance in compute_optimization if instance.is_stopped_but_allocated]
+legacy_instances = [instance for instance in compute_optimization if instance.is_legacy_size]
+high_cost_savings = [instance for instance in compute_optimization if instance.has_high_optimization_potential]
+print(f"Found {len(stopped_instances)} stopped instances, {len(legacy_instances)} legacy sizes, {len(high_cost_savings)} high optimization potential")
+
+# Compute governance summary
+compute_summary = client.get_compute_governance_summary()
+critical_compute_apps = [s for s in compute_summary if s.has_critical_issues]
+print(f"Found {len(critical_compute_apps)} applications with critical compute governance issues")
+
+# === NETWORK ANALYSIS ===
+
+# Network security analysis  
+network_results = client.query_network_analysis()
+print(f"Found {len(network_results)} network resources")
+
+# Firewall detailed analysis
+firewall_rules = client.query_firewall_detailed()
+high_risk = [rule for rule in firewall_rules if rule.is_high_risk]
+admin_exposed = [rule for rule in firewall_rules if rule.is_internet_facing and rule.allows_admin_ports]
+print(f"Found {len(high_risk)} high-risk firewall rules, {len(admin_exposed)} expose admin ports")
+
+# Network topology analysis
+topology_results = client.query_network_topology()
+high_risk_topology = [topo for topo in topology_results if "High" in topo.get("ConfigurationRisk", "")]
+print(f"Found {len(high_risk_topology)} high-risk network topology configurations")
+
+# Network resource optimization
+network_optimization = client.query_resource_optimization()
+unused_network = [res for res in network_optimization if "Unused" in res.get("UtilizationStatus", "")]
+print(f"Found {len(unused_network)} unused network resources for cost savings")
+
+# Network compliance summary
+network_summary = client.get_network_compliance_summary()
+critical_network = [s for s in network_summary if s.has_critical_issues]
+print(f"Found {len(critical_network)} applications with critical network issues")
+
+# === EXAMPLES USING PYDANTIC PROPERTIES ===
+
+# Filter storage resources by encryption strength
+strong_encryption = [r for r in storage_results if r.encryption_strength == "Strong"]
+weak_encryption = [r for r in storage_results if r.encryption_strength == "Weak"]
+
+# Filter instances by governance criteria
+production_instances = [instance for instance in compute_security if instance.is_running and instance.is_encrypted]
+cost_waste_instances = [instance for instance in compute_optimization if instance.is_stopped_but_allocated or instance.is_legacy_size]
+security_gaps = [instance for instance in compute_security if not instance.has_security_extensions]
+
+# Filter network rules by specific risks
+internet_admin = [rule for rule in firewall_rules if rule.is_internet_facing and rule.allows_admin_ports]
+high_priority_issues = [rule for rule in firewall_rules if rule.is_high_risk and rule.priority < 1000]
+
         print(f"""
-GCP Resource Analysis Package v{__version__}
-🔍 Comprehensive GCP resource analysis and compliance checking
-📚 Documentation: https://github.com/your-org/gcp-resource-analysis
+📊 COMPREHENSIVE ANALYSIS SUMMARY:
+Storage: {len(strong_encryption)} strong encryption, {len(weak_encryption)} weak encryption
+Compute: {len(production_instances)} production-ready, {len(cost_waste_instances)} cost waste, {len(security_gaps)} security gaps  
+Network: {len(internet_admin)} critical admin exposure, {len(high_priority_issues)} high-priority issues
         """)
-
-
-# Show info only in interactive mode
-try:
-    _show_package_info()
-except:
-    pass  # Silently fail if issues with display
+'''
