@@ -31,7 +31,7 @@ Example Usage:
     network_results = client.query_network_analysis()
 """
 
-__version__ = "1.0.5"
+__version__ = "1.0.6"
 __author__ = "Kenneth Stott"
 __email__ = "ken@promptql.io"
 __description__ = "GCP Resource Analysis Client - Security, Compliance & Optimization"
