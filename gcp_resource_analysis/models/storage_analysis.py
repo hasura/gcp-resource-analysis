@@ -8,7 +8,11 @@ Provides full Azure parity across all resource types
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
+
+from gcp_resource_analysis.models.iam_analysis import GCPIAMComplianceSummary
+from gcp_resource_analysis.models.network_analysis import GCPNetworkComplianceSummary
+from gcp_resource_analysis.models.compute_governance import GCPComputeComplianceSummary
 
 
 # =============================================================================
@@ -219,40 +223,9 @@ class GCPComputeOptimizationResult(BaseModel):
         return 'high' in self.cost_optimization_potential.lower()
 
 
-class GCPComputeComplianceSummary(BaseModel):
-    """Compute compliance summary by application"""
-    application: str = Field(..., description="Application name")
-    total_instances: int = Field(..., description="Total compute instances")
-    running_instances: int = Field(..., description="Number of running instances")
-    stopped_instances: int = Field(..., description="Number of stopped instances")
-    encrypted_instances: int = Field(..., description="Number of instances with encrypted disks")
-    properly_configured_instances: int = Field(..., description="Number of properly configured instances")
-    instances_with_issues: int = Field(..., description="Number of instances with issues")
-    security_score: float = Field(..., description="Security compliance score")
-    optimization_score: float = Field(..., description="Cost optimization score")
-    compliance_status: str = Field(..., description="Overall compliance status")
-
-
 # =============================================================================
 # NETWORK MODELS (Future Expansion)
 # =============================================================================
-
-class GCPNetworkResource(BaseModel):
-    """Network resource model for security analysis"""
-    application: str = Field(..., description="Application name")
-    network_resource: str = Field(..., description="Network resource name")
-    network_resource_type: str = Field(..., description="Network resource type")
-    security_findings: str = Field(..., description="Security findings")
-    compliance_risk: str = Field(..., description="Compliance risk assessment")
-    resource_group: str = Field(..., description="GCP Project ID")
-    location: str = Field(..., description="GCP region/location")
-    additional_details: str = Field(..., description="Additional network details")
-    resource_id: str = Field(..., description="Full GCP resource ID")
-
-    @property
-    def is_high_risk(self) -> bool:
-        """Check if this network resource has high risk"""
-        return self.compliance_risk.lower().startswith('high')
 
 
 class GCPNetworkSecurityResult(BaseModel):
@@ -273,18 +246,6 @@ class GCPNetworkSecurityResult(BaseModel):
     def is_high_risk(self) -> bool:
         """Check if this network resource has high risk"""
         return self.compliance_risk.lower().startswith('high')
-
-
-class GCPNetworkComplianceSummary(BaseModel):
-    """Network compliance summary by application"""
-    application: str = Field(..., description="Application name")
-    total_network_resources: int = Field(..., description="Total network resources")
-    vpc_network_count: int = Field(..., description="Number of VPC networks")
-    firewall_rule_count: int = Field(..., description="Number of firewall rules")
-    load_balancer_count: int = Field(..., description="Number of load balancers")
-    resources_with_issues: int = Field(..., description="Number of resources with issues")
-    security_score: float = Field(..., description="Network security score")
-    security_status: str = Field(..., description="Security status")
 
 
 # =============================================================================
@@ -325,18 +286,6 @@ class GCPIAMSecurityResult(BaseModel):
     def is_high_risk(self) -> bool:
         """Check if this IAM configuration has high risk"""
         return self.security_risk.lower().startswith('high')
-
-
-class GCPIAMComplianceSummary(BaseModel):
-    """IAM compliance summary by application"""
-    application: str = Field(..., description="Application name")
-    total_iam_bindings: int = Field(..., description="Total IAM policy bindings")
-    service_account_count: int = Field(..., description="Number of service accounts")
-    custom_role_count: int = Field(..., description="Number of custom roles")
-    high_privilege_bindings: int = Field(..., description="Number of high privilege bindings")
-    bindings_with_issues: int = Field(..., description="Number of bindings with issues")
-    iam_compliance_score: float = Field(..., description="IAM compliance score")
-    iam_compliance_status: str = Field(..., description="IAM compliance status")
 
 
 # =============================================================================
