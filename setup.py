@@ -5,6 +5,7 @@ Setup script for GCP Resource Analysis Client
 
 import os
 import re
+
 from setuptools import setup, find_packages
 
 
@@ -57,18 +58,16 @@ def get_requirements():
 CORE_REQUIREMENTS = [
     "requests>=2.28.0,<3.0.0",
     "python-dotenv>=0.19.0,<2.0.0",
-    "pydantic>=2.11.7"
+    "pydantic>=2.11.7",
+    "google-auth>=2.17.0,<3.0.0",
+    "google-auth-oauthlib>=1.0.0,<2.0.0",
+    "google-auth-httplib2>=0.1.0,<1.0.0",
+    "google-cloud-asset>=3.20.0,<4.0.0",
+    "google-cloud-resource-manager>=1.10.0,<2.0.0",
 ]
 
 # Optional requirements for enhanced functionality
 EXTRAS_REQUIRE = {
-    "auth": [
-        "google-auth>=2.17.0,<3.0.0",
-        "google-auth-oauthlib>=1.0.0,<2.0.0",
-        "google-auth-httplib2>=0.1.0,<1.0.0",
-        "google-cloud-asset>=3.20.0,<4.0.0",
-        "google-cloud-resource-manager>=1.10.0,<2.0.0",
-    ],
     "dev": [
         "pytest>=7.0.0,<8.0.0",
         "pytest-cov>=4.0.0,<5.0.0",
