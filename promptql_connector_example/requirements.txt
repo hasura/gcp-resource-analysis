@@ -1,2 +1,2 @@
 hasura-ndc==0.38
-gcp_resource_analysis==1.0.0
+gcp_resource_analysis==1.0.8
